@@ -1,0 +1,20 @@
+---
+- name: Assert mandatory vars
+  when: borgmatic_create_config_file
+  assert:
+    that:
+      - borg_password is defined
+      - borg_ssh_key is defined
+
+- no_log: '{{ no_log | default(true) }}'
+  set_fact:
+    borgmatic_config: >-
+      {{ borgmatic_config_defaults | combine(borgmatic_config, recursive=borgmatic_config_merge_recursive)}}
+
+- include_tasks: ./install_borg.yml
+
+- include_tasks: ./create_files.yml
+
+- name: Initiate the repo
+  failed_when: false
+  shell: borgmatic init --encryption repokey -c /opt/borgmatic/borgmatic.yml

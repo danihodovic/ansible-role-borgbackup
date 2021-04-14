@@ -1,0 +1,12 @@
+[tool.black]
+skip_numeric_underscore_normalization = true
+exclude = ".*(venv|virtualenv|migrations|node_modules|s3)"
+
+[tool.isort]
+profile = "black"
+multi_line_output = 3
+skip = '.virtualenv,.venv'
+
+[tool.pytest.ini_options]
+addopts = "--reruns=3"
+timeout = 3

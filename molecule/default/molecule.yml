@@ -1,0 +1,39 @@
+---
+dependency:
+  name: galaxy
+driver:
+  name: ec2
+platforms:
+  - name: borg
+    vpc_subnet_id: subnet-1efffb7b
+    image: ami-0c48db26521ca9f07
+    instance_type: m5.xlarge
+provisioner:
+  name: ansible
+  config_options:
+    defaults:
+      stdout_callback: yaml
+      host_key_checking: false
+      pipelining: true
+
+  inventory:
+    group_vars:
+      all:
+        no_log: false
+    host_vars: {}
+verifier:
+  name: testinfra
+  directory: ../../tests
+scenario:
+  test_sequence:
+    - dependency
+    - lint
+    - cleanup
+    - destroy
+    - syntax
+    - create
+    - converge
+    - side_effect
+    - verify
+    - cleanup
+    - destroy

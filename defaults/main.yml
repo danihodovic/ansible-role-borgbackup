@@ -1,0 +1,38 @@
+---
+borg_version: 1.1.16
+borgmatic_version: 1.5.13
+borgmatic_create_config_file: true
+borgmatic_config_file: /etc/borgmatic/config.yaml
+borgmatic_ssh_key_file: /root/.ssh/borgmatic_rsa
+borgmatic_config: {}
+borgmatic_config_merge_recursive: true
+borgmatic_config_defaults:
+  location:
+    one_file_system: true
+    source_directories: []
+    repositories: []
+
+  storage:
+    compression: auto,zstd
+    relocated_repo_access_is_ok: true
+    archive_name_format: '{hostname}-{now}'
+    encryption_passphrase: '{{ borg_password }}'
+    ssh_command: ssh -i '{{ borgmatic_ssh_key_file }}' -o StrictHostKeyChecking=no
+
+  retention:
+    keep_hourly: 24
+    keep_daily: 14
+    keep_weekly: -1
+    prefix: '{hostname}-'
+
+  consistency:
+    checks:
+      - repository
+      - archives
+  hooks:
+    before_backup:
+      - echo "`date` - Starting backup"
+    after_backup:
+      - echo "`date` - Finished backup"
+
+    postgresql_databases: []

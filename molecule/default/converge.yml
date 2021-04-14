@@ -1,0 +1,12 @@
+---
+- name: Deploy consul servers
+  hosts: borg
+  vars:
+    ansible_become: true
+  tasks:
+    - name: Include ansible-role-borgbackup
+      include_role:
+        name: ansible-role-borgbackup
+      vars:
+        borg_password: hello
+        borg_ssh_key: world

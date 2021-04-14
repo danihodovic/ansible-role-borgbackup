@@ -1,0 +1,24 @@
+---
+- when: borgmatic_create_config_file
+  block:
+    - name: Create borgmatic dirs
+      file:
+        state: directory
+        recurse: true
+        path: '{{ item | dirname }}'
+      loop:
+        - '{{ borgmatic_ssh_key_file }}'
+        - '{{ borgmatic_config_file }}'
+
+    - name: Copy borgmatic.yml
+      no_log: '{{ no_log | default(true) }}'
+      copy:
+        content: '{{ borgmatic_config | to_nice_yaml }}'
+        dest: '{{ borgmatic_config_file }}'
+
+    - name: Copy ssh key
+      no_log: '{{ no_log | default(true) }}'
+      copy:
+        content: '{{ borg_ssh_key }}'
+        dest: '{{ borgmatic_ssh_key_file }}'
+        mode: 0400
