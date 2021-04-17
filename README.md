@@ -1,4 +1,4 @@
-# ansible-role-borgbackup
+# ansible-role-borgbackup [![Build Status](https://ci.depode.com/api/badges/danihodovic/ansible-role-borgbackup/status.svg)](https://ci.depode.com/danihodovic/ansible-role-borgbackup)
 
 An Ansible role to install [Borg](https://github.com/borgbackup/borg) and [Borgmatic](https://github.com/witten/borgmatic).
 
