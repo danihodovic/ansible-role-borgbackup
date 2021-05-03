@@ -1,12 +1,56 @@
 ---
-- name: Deploy consul servers
-  hosts: borg
+- name: Deploy server
+  hosts: server
   vars:
     ansible_become: true
   tasks:
     - name: Include ansible-role-borgbackup
       include_role:
         name: ansible-role-borgbackup
+        tasks_from: install_borg.yml
+
+- name: Deploy client
+  hosts: client
+  vars:
+    ansible_become: true
+  tasks:
+    - name: Generate ssh keys
+      community.crypto.openssh_keypair:
+        path: /root/.ssh/borg_rsa_gen
+
+    - name: Read remote private key
+      slurp:
+        src: '/root/.ssh/borg_rsa_gen'
+      register: private_key_b64
+
+    - name: Read remote public key
+      slurp:
+        src: '/root/.ssh/borg_rsa_gen.pub'
+      register: public_key_b64
+
+    - set_fact:
+        borg_ssh_key: '{{ private_key_b64.content | b64decode }}'
+
+    - name: Add public key to server
+      delegate_to: server
+      authorized_key:
+        user: root
+        key: '{{ public_key_b64.content | b64decode }}'
+
+    - name: Collect server facts
+      delegate_to: server
+      delegate_facts: true
+      ansible.builtin.setup:
+        gather_subset: [network]
+
+    - name: Include ansible-role-borgbackup
+      include_role:
+        name: ansible-role-borgbackup
       vars:
         borg_password: hello
-        borg_ssh_key: world
+        borgmatic_config:
+          location:
+            source_directories:
+              - /home/ubuntu
+            repositories:
+              - 'root@{{ hostvars.server.ansible_default_ipv4.address }}:/data'

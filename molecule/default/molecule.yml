@@ -4,7 +4,12 @@ dependency:
 driver:
   name: ec2
 platforms:
-  - name: borg
+  - name: client
+    vpc_subnet_id: subnet-1efffb7b
+    image: ami-0c48db26521ca9f07
+    instance_type: m5.xlarge
+
+  - name: server
     vpc_subnet_id: subnet-1efffb7b
     image: ami-0c48db26521ca9f07
     instance_type: m5.xlarge
