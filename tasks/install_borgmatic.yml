@@ -1,0 +1,18 @@
+---
+- include_tasks: ./install_fetch.yml
+
+- name: Install borgmatic
+  shell: >-
+    fetch --repo
+    https://github.com/danihodovic/borgmatic-binary
+    --release-asset='borgmatic'
+    --tag {{ borgmatic_version }}
+    /tmp
+
+- name: Move borgmatic binary
+  become: true
+  copy:
+    src: /tmp/borgmatic
+    dest: /usr/local/bin/borgmatic
+    remote_src: true
+    mode: 0755

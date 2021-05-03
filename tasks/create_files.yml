@@ -13,7 +13,7 @@
     - name: Copy borgmatic.yml
       no_log: '{{ no_log | default(true) }}'
       copy:
-        content: '{{ borgmatic_config | to_nice_yaml }}'
+        content: '{{ borgmatic_cfg | to_nice_yaml }}'
         dest: '{{ borgmatic_config_file }}'
 
     - name: Copy ssh key

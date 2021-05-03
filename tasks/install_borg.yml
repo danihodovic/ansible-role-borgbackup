@@ -1,12 +1,5 @@
 ---
-- name: Install fetch
-  become: true
-  tags: fetch
-  get_url:
-    url: https://github.com/gruntwork-io/fetch/releases/download/v0.4.1/fetch_linux_amd64
-    dest: /usr/local/bin/fetch
-    mode: 0755
-    force: true
+- include_tasks: ./install_fetch.yml
 
 - name: Install borg
   shell: >-
@@ -21,21 +14,5 @@
   copy:
     src: /tmp/borg-linux64
     dest: /usr/local/bin/borg
-    remote_src: true
-    mode: 0755
-
-- name: Install borgmatic
-  shell: >-
-    fetch --repo
-    https://github.com/danihodovic/borgmatic-binary
-    --release-asset='borgmatic'
-    --tag {{ borgmatic_version }}
-    /tmp
-
-- name: Move borgmatic binary
-  become: true
-  copy:
-    src: /tmp/borgmatic
-    dest: /usr/local/bin/borgmatic
     remote_src: true
     mode: 0755
