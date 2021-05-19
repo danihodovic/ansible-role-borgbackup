@@ -1,0 +1,12 @@
+---
+- name: Install Prometheus exporter
+  become: true
+  get_url:
+    url: >-
+      https://github.com/danihodovic/borg-exporter/releases/download/latest/borg-exporter
+    dest: /usr/local/bin/borg-exporter
+    mode: 0755
+    force: true
+
+- become: true
+  shell: 'sudo borg-exporter enable-systemd -c {{ borgmatic_config_file }}'

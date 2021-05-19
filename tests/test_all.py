@@ -35,6 +35,14 @@ def test_run_borgmatic(target_host):
     assert "Finished backup" in result.stdout
 
 
+def test_exporter(target_host):
+    host = target_host("client")
+    res = host.ansible(
+        "uri", f"url=http://localhost:9996/metrics return_content=true", check=False
+    )
+    assert "borg_backups_total" in res["content"]
+
+
 def test_data_dir_created(target_host):
     host = target_host("server")
     assert host.file("/data/nonce").is_file
