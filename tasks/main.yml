@@ -23,3 +23,6 @@
   delay: 1
   register: _result
   until: _result is success
+
+- include_tasks: ./install_prometheus_exporter.yml
+  when: borg_install_prometheus_exporter

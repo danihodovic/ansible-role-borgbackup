@@ -47,6 +47,7 @@
       include_role:
         name: ansible-role-borgbackup
       vars:
+        borg_install_prometheus_exporter: true
         borg_password: hello
         borgmatic_config:
           location:
